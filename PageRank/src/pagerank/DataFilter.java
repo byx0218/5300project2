@@ -2,22 +2,25 @@ package pagerank;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class DataFilter {
 	
-	private static final String FILTERED = "filter.txt";
-	private static final String EDGES = "edges.txt";
+	/** Regular expression separator string. */
 	private static final String SPACES = "\\s+";
 	
-	// Filter parameters for NetID xg95.
+	/** Files to read or write. */
+	private static final String FILTERED = "filter.txt";
+	private static final String EDGES = "edges.txt";
+	
+	/** Filter parameters from NetID xg95. */
 	private static final double NET_ID = 0.59;
 	private static final double REJECT_MIN = 0.9 * NET_ID;
 	private static final double REJECT_MAX = REJECT_MIN + 0.01;
 	
+	/** File IO. */
 	private BufferedReader reader;
 	private BufferedWriter writer;
 	
@@ -48,12 +51,10 @@ public class DataFilter {
 					continue;
 				}
 				
-				
+				// 
 			}
 			
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
