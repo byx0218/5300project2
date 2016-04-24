@@ -23,6 +23,8 @@ public class EdgeFilter {
 	private static final double REJECT_MIN = 0.9 * NET_ID;
 	private static final double REJECT_MAX = REJECT_MIN + 0.01;
 	
+	private static final float INIT_PR = 1.0f;
+	
 	/**
 	 * Constructs an Edge filter.
 	 */
@@ -40,8 +42,7 @@ public class EdgeFilter {
 		String line = null;
 		
 		try {
-			BufferedReader reader =
-					new BufferedReader(new FileReader(EDGES));
+			BufferedReader reader = new BufferedReader(new FileReader(EDGES));
 			
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -88,10 +89,8 @@ public class EdgeFilter {
 		long currSrcId = -1;
 		
 		try {
-			BufferedReader reader =
-					new BufferedReader(new FileReader(EDGES));
-			BufferedWriter writer =
-					new BufferedWriter(new FileWriter(FILTERED, false));
+			BufferedReader reader = new BufferedReader(new FileReader(EDGES));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILTERED, false));
 			
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -109,14 +108,17 @@ public class EdgeFilter {
 					if (currSrcId != -1) {
 						writer.newLine();
 						
-						while (currSrcId + 1 != srcId) {
-							currSrcId ++;
+						for (; currSrcId < srcId; currSrcId ++) {
 							writer.write(Long.toString(currSrcId));
+							writer.write(SPACE);
+							writer.write(Float.toString(INIT_PR));
 							writer.newLine();
 						}
 					}
 					
 					writer.write(Long.toString(srcId));
+					writer.write(SPACE);
+					writer.write(Float.toString(INIT_PR));
 					currSrcId = srcId;
 				}
 				
@@ -145,8 +147,7 @@ public class EdgeFilter {
 		
 		try {
 			String line = null;
-			BufferedReader reader =
-					new BufferedReader(new FileReader(FILTERED));
+			BufferedReader reader = new BufferedReader(new FileReader(FILTERED));
 			
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -154,8 +155,8 @@ public class EdgeFilter {
 				if (line.isEmpty())
 					break;
 				
-				String[] edges = line.split(DELIMITER);
-				long srcId = Long.parseLong(edges[0]);
+				String[] node = line.split(SPACE, 3);
+				long srcId = Long.parseLong(node[0]);
 				
 				if (!nodeTbl.containsKey(srcId)) {
 					nodeTbl.put(srcId, new Node(srcId));
@@ -163,8 +164,14 @@ public class EdgeFilter {
 				
 				Node srcNode = nodeTbl.get(srcId);
 				
-				for (int i = 1; i < edges.length; i ++) {
-					long dstId = Long.parseLong(edges[i]);
+				if (node.length < 3) {  // no out-going edge
+					continue;
+				}
+				
+				String[] dstIds = node[2].trim().split(SPACE);
+				
+				for (int i = 0; i < dstIds.length; i ++) {
+					long dstId = Long.parseLong(dstIds[i]);
 					srcNode.addDestination(dstId);
 					
 					if (!nodeTbl.containsKey(dstId)) {
