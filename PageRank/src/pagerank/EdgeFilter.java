@@ -33,8 +33,8 @@ public class EdgeFilter {
 	 * REJECT_MIN and REJECT_MAX. Returns all the Nodes in a map.
 	 * @return map of all Nodes
 	 */
-	public Map<String, Node> processEdges() {
-		Map<String, Node> nodeTbl = new HashMap<>();
+	public Map<Long, Node> processEdges() {
+		Map<Long, Node> nodeTbl = new HashMap<>();
 		String line = null;
 		
 		try {
@@ -49,8 +49,8 @@ public class EdgeFilter {
 				}
 				
 				String[] edge = line.split(SPACES);
-				String srcId = edge[0];
-				String dstId = edge[1];
+				long srcId = Long.parseLong(edge[0]);
+				long dstId = Long.parseLong(edge[1]);
 				double x = Double.parseDouble(edge[2]);
 				
 				if (!nodeTbl.containsKey(srcId)) {
@@ -83,8 +83,7 @@ public class EdgeFilter {
 	 */
 	public void filterEdges() {
 		String line = null;
-		String currSrcId = null;
-		int count = 0;
+		long currSrcId = -1;
 		
 		try {
 			BufferedReader reader =
@@ -100,27 +99,22 @@ public class EdgeFilter {
 				}
 				
 				String[] edge = line.split(SPACES);
-				String srcId = edge[0];
-				String dstId = edge[1];
+				long srcId = Long.parseLong(edge[0]);
+				long dstId = Long.parseLong(edge[1]);
 				double x = Double.parseDouble(edge[2]);
 				
-				if (!srcId.equals(currSrcId)) {
-					if (currSrcId != null) {
+				if (srcId != currSrcId) {
+					if (currSrcId != -1) {
 						writer.newLine();
-						count ++;
 						
-						int src = Integer.parseInt(srcId);
-						int lastSrc = Integer.parseInt(currSrcId);
-						
-						while (lastSrc + 1 != src) {
-							lastSrc ++;
-							writer.write(lastSrc);
+						while (currSrcId + 1 != srcId) {
+							currSrcId ++;
+							writer.write(currSrcId + "");
 							writer.newLine();
-							count ++;
 						}
 					}
 					
-					writer.write(srcId);
+					writer.write(srcId + "");
 					currSrcId = srcId;
 				}
 				
@@ -129,16 +123,60 @@ public class EdgeFilter {
 				}
 				
 				writer.write(" ");
-				writer.write(dstId);
+				writer.write(dstId + "");
 			}
 			
-			count ++;
-			System.out.println(count);
 			reader.close();
 			writer.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Processes the filtered Edges. Returns all the Nodes in a map.
+	 * @return map of all Nodes
+	 */
+	public Map<Long, Node> processFilteredEdges() {
+		Map<Long, Node> nodeTbl = new HashMap<>();
+		
+		try {
+			String line = null;
+			BufferedReader reader =
+					new BufferedReader(new FileReader("filter.txt"));
+			
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				
+				if (line.isEmpty())
+					break;
+				
+				String[] edges = line.split("\\s+");
+				long srcId = Long.parseLong(edges[0]);
+				
+				if (!nodeTbl.containsKey(srcId)) {
+					nodeTbl.put(srcId, new Node(srcId));
+				}
+				
+				Node srcNode = nodeTbl.get(srcId);
+				
+				for (int i = 1; i < edges.length; i ++) {
+					long dstId = Long.parseLong(edges[i]);
+					srcNode.addDestination(dstId);
+					
+					if (!nodeTbl.containsKey(dstId)) {
+						nodeTbl.put(dstId, new Node(dstId));
+					}
+				}
+			}
+			
+			reader.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return nodeTbl;
+	}
 }

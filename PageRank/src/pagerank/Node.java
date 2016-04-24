@@ -6,19 +6,19 @@ import java.util.List;
 public class Node {
 	
 	/** ID of this node. */
-	private String nodeId;
+	private long nodeId;
 	
 	/** Page rank of this node. */
 	private float pageRank;
 	
 	/** Neighbors (destinations) of this node. */
-	private List<String> dest;
+	private List<Long> dest;
 	
 	/**
 	 * Constructs a Node with given Node ID.
 	 * @param id Node ID
 	 */
-	public Node(String id) {
+	public Node(long id) {
 		this(id, 0.0f);
 	}
 	
@@ -27,7 +27,7 @@ public class Node {
 	 * @param id Node ID
 	 * @param pr Node's page rank
 	 */
-	public Node(String id, float pr) {
+	public Node(long id, float pr) {
 		nodeId = id;
 		pageRank = pr;
 		dest = new ArrayList<>();
@@ -37,7 +37,7 @@ public class Node {
 	 * Returns the ID of this Node.
 	 * @return Node ID
 	 */
-	public String getNodeId() {
+	public long getNodeId() {
 		return nodeId;
 	}
 	
@@ -61,7 +61,7 @@ public class Node {
 	 * Adds a destination Node ID to the destination list of this Node.
 	 * @param id destination Node ID
 	 */
-	public void addDestination(String id) {
+	public void addDestination(long id) {
 		dest.add(id);
 	}
 	
@@ -69,7 +69,8 @@ public class Node {
 	 * Returns the destination Node list of this Node.
 	 * @return destination Node list of this Node
 	 */
-	public List<String> getDestinationList() {
+	public List<Long> getDestinationList() {
 		return dest;
 	}
+	
 }
