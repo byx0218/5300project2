@@ -38,7 +38,8 @@ public class EdgeFilter {
 		String line = null;
 		
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(EDGES));
+			BufferedReader reader =
+					new BufferedReader(new FileReader(EDGES));
 			
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -83,12 +84,13 @@ public class EdgeFilter {
 	public void filterEdges() {
 		String line = null;
 		String currSrcId = null;
-		StringBuilder out = null;
 		int count = 0;
 		
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(EDGES));
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILTERED));
+			BufferedReader reader =
+					new BufferedReader(new FileReader(EDGES));
+			BufferedWriter writer =
+					new BufferedWriter(new FileWriter(FILTERED, false));
 			
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -103,30 +105,37 @@ public class EdgeFilter {
 				double x = Double.parseDouble(edge[2]);
 				
 				if (!srcId.equals(currSrcId)) {
-					if (out != null) {
-						writer.write(out.toString());
+					if (currSrcId != null) {
 						writer.newLine();
 						count ++;
+						
+						int src = Integer.parseInt(srcId);
+						int lastSrc = Integer.parseInt(currSrcId);
+						
+						while (lastSrc + 1 != src) {
+							lastSrc ++;
+							writer.write(lastSrc);
+							writer.newLine();
+							count ++;
+						}
 					}
 					
+					writer.write(srcId);
 					currSrcId = srcId;
-					out = new StringBuilder(srcId);
 				}
 				
 				if (REJECT_MIN <= x && x < REJECT_MAX) {
 					continue;
 				}
 				
-				out.append(" ").append(dstId);
+				writer.write(" ");
+				writer.write(dstId);
 			}
 			
-			writer.write(out.toString());
 			count ++;
+			System.out.println(count);
 			reader.close();
 			writer.close();
-			
-			System.out.println(count);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
