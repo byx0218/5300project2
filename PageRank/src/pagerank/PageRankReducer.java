@@ -12,6 +12,8 @@ import org.apache.hadoop.mapred.Reporter;
 public class PageRankReducer extends MapReduceBase
         implements Reducer<Text, Text, Text, Text> {
 
+    private static final double D = 0.85;
+
     @Override
     public void reduce(Text key, Iterator<Text> values,
             OutputCollector<Text, Text> output, Reporter reporter)
