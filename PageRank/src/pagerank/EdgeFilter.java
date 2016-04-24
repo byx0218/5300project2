@@ -9,13 +9,14 @@ import java.util.Map;
 
 public class EdgeFilter {
 	
-	/** Regular expression separator string. */
-	private static final String SPACES = "\\s+";
 	private static final String SPACE = " ";
 	
+	/** Regular expression separator string. */
+	private static final String DELIMITER = "\\s+";
+	
 	/** Files to read or write. */
-	private static final String FILTERED = "filtered_edges.txt";
 	private static final String EDGES = "edges.txt";
+	private static final String FILTERED = "filtered_edges.txt";
 	
 	/** Filter parameters from NetID "xg95". */
 	private static final double NET_ID = 0.59;
@@ -49,7 +50,7 @@ public class EdgeFilter {
 					break;
 				}
 				
-				String[] edge = line.split(SPACES);
+				String[] edge = line.split(DELIMITER);
 				long srcId = Long.parseLong(edge[0]);
 				long dstId = Long.parseLong(edge[1]);
 				double x = Double.parseDouble(edge[2]);
@@ -99,7 +100,7 @@ public class EdgeFilter {
 					break;
 				}
 				
-				String[] edge = line.split(SPACES);
+				String[] edge = line.split(DELIMITER);
 				long srcId = Long.parseLong(edge[0]);
 				long dstId = Long.parseLong(edge[1]);
 				double x = Double.parseDouble(edge[2]);
@@ -153,7 +154,7 @@ public class EdgeFilter {
 				if (line.isEmpty())
 					break;
 				
-				String[] edges = line.split(SPACES);
+				String[] edges = line.split(DELIMITER);
 				long srcId = Long.parseLong(edges[0]);
 				
 				if (!nodeTbl.containsKey(srcId)) {
