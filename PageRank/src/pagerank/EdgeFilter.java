@@ -11,9 +11,10 @@ public class EdgeFilter {
 	
 	/** Regular expression separator string. */
 	private static final String SPACES = "\\s+";
+	private static final String SPACE = " ";
 	
 	/** Files to read or write. */
-	private static final String FILTERED = "filter.txt";
+	private static final String FILTERED = "filtered_edges.txt";
 	private static final String EDGES = "edges.txt";
 	
 	/** Filter parameters from NetID "xg95". */
@@ -109,12 +110,12 @@ public class EdgeFilter {
 						
 						while (currSrcId + 1 != srcId) {
 							currSrcId ++;
-							writer.write(currSrcId + "");
+							writer.write(Long.toString(currSrcId));
 							writer.newLine();
 						}
 					}
 					
-					writer.write(srcId + "");
+					writer.write(Long.toString(srcId));
 					currSrcId = srcId;
 				}
 				
@@ -122,8 +123,8 @@ public class EdgeFilter {
 					continue;
 				}
 				
-				writer.write(" ");
-				writer.write(dstId + "");
+				writer.write(SPACE);
+				writer.write(Long.toString(dstId));
 			}
 			
 			reader.close();
@@ -144,7 +145,7 @@ public class EdgeFilter {
 		try {
 			String line = null;
 			BufferedReader reader =
-					new BufferedReader(new FileReader("filter.txt"));
+					new BufferedReader(new FileReader(FILTERED));
 			
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -152,7 +153,7 @@ public class EdgeFilter {
 				if (line.isEmpty())
 					break;
 				
-				String[] edges = line.split("\\s+");
+				String[] edges = line.split(SPACES);
 				long srcId = Long.parseLong(edges[0]);
 				
 				if (!nodeTbl.containsKey(srcId)) {
