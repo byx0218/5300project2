@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,31 +21,25 @@ public class EdgeFilter {
 	private static final double REJECT_MIN = 0.9 * NET_ID;
 	private static final double REJECT_MAX = REJECT_MIN + 0.01;
 	
-	/** File IO. */
-	private BufferedReader reader;
-	private BufferedWriter writer;
-	
 	/**
-	 * Constructs an Edge filter. Must call close() after processData() finished.
+	 * Constructs an Edge filter.
 	 */
 	public EdgeFilter() {
-		try {
-			reader = new BufferedReader(new FileReader(EDGES));
-			writer = new BufferedWriter(new FileWriter(FILTERED));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Processes the Edges. Filter out the Edges with values within
+	 * REJECT_MIN and REJECT_MAX. Returns all the Nodes in a map.
+	 * @return map of all Nodes
 	 */
 	public Map<String, Node> processEdges() {
 		Map<String, Node> nodeTbl = new HashMap<>();
 		String line = null;
 		
 		try {
+			BufferedReader reader = new BufferedReader(new FileReader(EDGES));
+			
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				
@@ -74,6 +67,8 @@ public class EdgeFilter {
 				nodeTbl.get(srcId).addDestination(dstId);
 			}
 			
+			reader.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,11 +76,58 @@ public class EdgeFilter {
 		return nodeTbl;
 	}
 	
-	public void close() {
+	/**
+	 * Filters out all the Edges valued within REJECT_MIN and REJECT_MAX.
+	 * Writes the valid Edges into another file.
+	 */
+	public void filterEdges() {
+		String line = null;
+		String currSrcId = null;
+		StringBuilder out = null;
+		int count = 0;
+		
 		try {
+			BufferedReader reader = new BufferedReader(new FileReader(EDGES));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILTERED));
+			
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				
+				if (line.isEmpty()) {
+					break;
+				}
+				
+				String[] edge = line.split(SPACES);
+				String srcId = edge[0];
+				String dstId = edge[1];
+				double x = Double.parseDouble(edge[2]);
+				
+				if (!srcId.equals(currSrcId)) {
+					if (out != null) {
+						writer.write(out.toString());
+						writer.newLine();
+						count ++;
+					}
+					
+					currSrcId = srcId;
+					out = new StringBuilder(srcId);
+				}
+				
+				if (REJECT_MIN <= x && x < REJECT_MAX) {
+					continue;
+				}
+				
+				out.append(" ").append(dstId);
+			}
+			
+			writer.write(out.toString());
+			count ++;
 			reader.close();
 			writer.close();
-		} catch (IOException e) {
+			
+			System.out.println(count);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
