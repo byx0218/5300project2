@@ -40,7 +40,7 @@ public class PageRank {
         }
         
         for (int i = 0; i < ITERATIONS; i ++) {
-            System.out.println("Residual Error Iter " + i + ": " + residuals[i]);
+            System.out.println("Iteration " + i + " avg error " + residuals[i]);
         }
     }
     
@@ -60,8 +60,8 @@ public class PageRank {
         
         RunningJob job = JobClient.runJob(conf);
         job.waitForCompletion();
-        long residual = job.getCounters().getCounter(PageRank.Residual.ERROR);
-        return residual / ((double) 10e4) / N;
+        long residual = job.getCounters().findCounter(PageRank.Residual.ERROR).getValue();
+        return residual / (1.0 * 10e4) / N;
     }
     
 }

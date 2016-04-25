@@ -108,11 +108,12 @@ public class EdgeFilter {
                     if (currSrcId != -1) {
                         writer.newLine();
                         
-                        for (; currSrcId < srcId; currSrcId ++) {
+                        while (currSrcId + 1 < srcId) {
                             writer.write(Long.toString(currSrcId));
                             writer.write(SPACE);
                             writer.write(Float.toString(INIT_PR));
                             writer.newLine();
+                            currSrcId ++;
                         }
                     }
                     

@@ -24,7 +24,7 @@ public class PageRankReducer extends MapReduceBase
         double newPr = 0.0;
         long residual = 0;
         String value = null;
-        String dstIds = "";
+        String dstIds = null;
         
         while (values.hasNext()) {
             value = values.next().toString();
@@ -48,7 +48,7 @@ public class PageRankReducer extends MapReduceBase
         residual = (long) Math.floor((Math.abs(oldPr - newPr) / newPr) * 10e4);
         reporter.incrCounter(PageRank.Residual.ERROR, residual);
         
-        Text outValue = new Text(Double.toString(newPr) + SPACE + dstIds);
+        Text outValue = new Text(SPACE + Double.toString(newPr) + SPACE + dstIds);
         output.collect(key, outValue);
     }
 

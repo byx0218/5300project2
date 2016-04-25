@@ -34,7 +34,6 @@ public class PageRankMapper extends MapReduceBase
             String[] dstIdArr = dstIds.split(DELIMITER);
             int outDegree = dstIdArr.length;
             
-            
             for (String dstId : dstIdArr) {
                 Text outKey = new Text(dstId);
                 Text outValue = new Text(Double.toString(pr / outDegree));
