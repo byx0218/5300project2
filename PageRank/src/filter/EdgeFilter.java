@@ -31,7 +31,27 @@ public class EdgeFilter {
      * Constructs an Edge filter.
      */
     public static void main(String[] args) {
+        Map<Long, Node> nodeTbl1 = processEdges();
         filterEdges();
+        Map<Long, Node> nodeTbl2 = processFilteredEdges();
+        
+        System.out.println(nodeTbl1.size());
+        System.out.println(nodeTbl2.size());
+        
+        for (Long srcId : nodeTbl1.keySet()) {
+            if (nodeTbl2.containsKey(srcId)) {
+                Node n1 = nodeTbl1.get(srcId);
+                Node n2 = nodeTbl2.get(srcId);
+                
+                if (!n1.getDestinationList().equals(n2.getDestinationList())) {
+                    System.out.println("list error " + srcId);
+                    break;
+                }
+            } else {
+                System.out.println("key error " + srcId);
+                break;
+            }
+        }
     }
     
     /**
