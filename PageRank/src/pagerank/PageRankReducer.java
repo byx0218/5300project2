@@ -15,6 +15,7 @@ public class PageRankReducer extends MapReduceBase
     private static final double D = 0.85;
     private static final int N = 685230;
     private static final String SPACE = " ";
+    private static final String DELIMITER = "\\s+";
 
     @Override
     public void reduce(Text key, Iterator<Text> values,
@@ -22,20 +23,23 @@ public class PageRankReducer extends MapReduceBase
             throws IOException {
         double oldPr = 0.0;
         double newPr = 0.0;
-        long residual = 0;
         String value = null;
         String dstIds = null;
         
         while (values.hasNext()) {
             value = values.next().toString();
             
+            if (value.isEmpty()) {
+                break;
+            }
+            
             if (value.startsWith("dstIds ")) {
-                dstIds = value.split(SPACE, 2)[1];
+                dstIds = value.split(DELIMITER, 2)[1];
                 continue;
             }
             
             if (value.startsWith("pr ")) {
-                oldPr = Double.parseDouble(value.split(SPACE, 2)[1]);
+                oldPr = Double.parseDouble(value.split(DELIMITER, 2)[1]);
                 continue;
             }
             
@@ -45,10 +49,10 @@ public class PageRankReducer extends MapReduceBase
         newPr *= D;
         newPr += (1 - D) / N;
         
-        residual = (long) Math.floor((Math.abs(oldPr - newPr) / newPr) * 10e4);
+        long residual = (long) Math.floor((Math.abs(oldPr - newPr) / newPr) * 10e4);
         reporter.incrCounter(PageRank.Residual.ERROR, residual);
         
-        Text outValue = new Text(SPACE + Double.toString(newPr) + SPACE + dstIds);
+        Text outValue = new Text(Double.toString(newPr) + SPACE + dstIds);
         output.collect(key, outValue);
     }
 

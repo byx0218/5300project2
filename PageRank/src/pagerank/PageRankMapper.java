@@ -32,11 +32,11 @@ public class PageRankMapper extends MapReduceBase
         if (node.length == 3) {
             dstIds = node[2].trim();
             String[] dstIdArr = dstIds.split(DELIMITER);
-            int outDegree = dstIdArr.length;
+            String update = Double.toString(pr / dstIdArr.length);
             
             for (String dstId : dstIdArr) {
                 Text outKey = new Text(dstId);
-                Text outValue = new Text(Double.toString(pr / outDegree));
+                Text outValue = new Text(update);
                 output.collect(outKey, outValue);
             }
         }

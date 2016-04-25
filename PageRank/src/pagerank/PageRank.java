@@ -18,7 +18,7 @@ public class PageRank {
     private static final int N = 685230;
     
     protected static enum Residual {
-        ERROR;
+        ERROR
     }
     
     public static void main(String[] args) throws IOException {
