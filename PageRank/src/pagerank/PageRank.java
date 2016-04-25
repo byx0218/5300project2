@@ -33,10 +33,14 @@ public class PageRank {
         
         for (int i = 0; i < ITERATIONS; i ++) {
             if (i > 0) {
-                inputPath = outputPath + "/output_" + i;
+                inputPath = outputPath + "/output" + i;
             }
             
-            residuals[i] = runPageRank(inputPath, outputPath + "/output_" + (i + 1));
+            residuals[i] = runPageRank(inputPath, outputPath + "/output" + (i + 1));
+        }
+        
+        for (int i = 0; i < ITERATIONS; i ++) {
+            System.out.println("Residual Error Iter " + i + ": " + residuals[i]);
         }
     }
     
