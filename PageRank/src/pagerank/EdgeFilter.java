@@ -155,7 +155,7 @@ public class EdgeFilter {
                 if (line.isEmpty())
                     break;
                 
-                String[] node = line.split(SPACE, 3);
+                String[] node = line.split(DELIMITER, 3);
                 long srcId = Long.parseLong(node[0]);
                 
                 if (!nodeTbl.containsKey(srcId)) {
@@ -168,7 +168,7 @@ public class EdgeFilter {
                     continue;
                 }
                 
-                String[] dstIds = node[2].trim().split(SPACE);
+                String[] dstIds = node[2].trim().split(DELIMITER);
                 
                 for (int i = 0; i < dstIds.length; i ++) {
                     long dstId = Long.parseLong(dstIds[i]);
