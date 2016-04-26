@@ -9,11 +9,6 @@ import java.util.Map;
 
 public class EdgeFilter {
     
-    private static final String SPACE = " ";
-    
-    /** Regular expression separator string. */
-    private static final String DELIMITER = "\\s+";
-    
     /** Files to read or write. */
     private static final String EDGES = "edges.txt";
     private static final String FLTRED = "filtered_edges.txt";
@@ -23,11 +18,8 @@ public class EdgeFilter {
     private static final double REJECT_MIN = 0.9 * NET_ID;
     private static final double REJECT_MAX = REJECT_MIN + 0.01;
     
-    private static final double INIT_PR = 1.0 / 685230;
+    private static final double INIT_PR = 1.0 / util.Const.N;
     
-    /**
-     * Constructs an Edge filter.
-     */
     public static void main(String[] args) {
         Map<Long, Node> nodeTbl1 = processEdges();
         filterEdges();
@@ -71,7 +63,7 @@ public class EdgeFilter {
                     break;
                 }
                 
-                String[] edge = line.split(DELIMITER);
+                String[] edge = line.split(util.Const.DELIMITER);
                 long srcId = Long.parseLong(edge[0]);
                 long dstId = Long.parseLong(edge[1]);
                 double x = Double.parseDouble(edge[2]);
@@ -119,7 +111,7 @@ public class EdgeFilter {
                     break;
                 }
                 
-                String[] edge = line.split(DELIMITER);
+                String[] edge = line.split(util.Const.DELIMITER);
                 long srcId = Long.parseLong(edge[0]);
                 long dstId = Long.parseLong(edge[1]);
                 double x = Double.parseDouble(edge[2]);
@@ -131,14 +123,14 @@ public class EdgeFilter {
                         while (currSrcId + 1 != srcId) {
                             currSrcId ++;
                             writer.write(Long.toString(currSrcId));
-                            writer.write(SPACE);
+                            writer.write(util.Const.SPACE);
                             writer.write(Double.toString(INIT_PR));
                             writer.newLine();
                         }
                     }
                     
                     writer.write(Long.toString(srcId));
-                    writer.write(SPACE);
+                    writer.write(util.Const.SPACE);
                     writer.write(Double.toString(INIT_PR));
                     currSrcId = srcId;
                 }
@@ -147,7 +139,7 @@ public class EdgeFilter {
                     continue;
                 }
                 
-                writer.write(SPACE);
+                writer.write(util.Const.SPACE);
                 writer.write(Long.toString(dstId));
             }
             
@@ -176,7 +168,7 @@ public class EdgeFilter {
                 if (line.isEmpty())
                     break;
                 
-                String[] node = line.split(DELIMITER, 3);
+                String[] node = line.split(util.Const.DELIMITER, 3);
                 long srcId = Long.parseLong(node[0]);
                 
                 if (!nodeTbl.containsKey(srcId)) {
@@ -189,7 +181,7 @@ public class EdgeFilter {
                     continue;
                 }
                 
-                String[] dstIds = node[2].trim().split(DELIMITER);
+                String[] dstIds = node[2].trim().split(util.Const.DELIMITER);
                 
                 for (int i = 0; i < dstIds.length; i ++) {
                     long dstId = Long.parseLong(dstIds[i]);

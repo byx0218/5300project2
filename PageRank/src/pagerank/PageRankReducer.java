@@ -28,12 +28,12 @@ public class PageRankReducer extends MapReduceBase
                 break;
             }
             
-            if (value.startsWith("dstIds ")) {
+            if (value.startsWith(util.Const.DST_IDS_PREFIX)) {
                 dstIds = value.split(util.Const.DELIMITER, 2)[1];
                 continue;
             }
             
-            if (value.startsWith("pr ")) {
+            if (value.startsWith(util.Const.PAGE_RANK_PREFIX)) {
                 oldPr = Double.parseDouble(value.split(util.Const.DELIMITER, 2)[1]);
                 continue;
             }
