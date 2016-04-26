@@ -25,7 +25,7 @@ public class EdgeFilter {
     private static final double REJECT_MIN = 0.9 * NET_ID;
     private static final double REJECT_MAX = REJECT_MIN + 0.01;
     
-    private static final float INIT_PR = 1.0f;
+    private static final double INIT_PR = 1.0 / 685230;
     
     /**
      * Constructs an Edge filter.
@@ -134,14 +134,14 @@ public class EdgeFilter {
                             currSrcId ++;
                             writer.write(Long.toString(currSrcId));
                             writer.write(SPACE);
-                            writer.write(Float.toString(INIT_PR));
+                            writer.write(Double.toString(INIT_PR));
                             writer.newLine();
                         }
                     }
                     
                     writer.write(Long.toString(srcId));
                     writer.write(SPACE);
-                    writer.write(Float.toString(INIT_PR));
+                    writer.write(Double.toString(INIT_PR));
                     currSrcId = srcId;
                 }
                 

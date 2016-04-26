@@ -59,7 +59,6 @@ public class PageRank {
         FileOutputFormat.setOutputPath(conf, new Path(outputPath));
         
         RunningJob job = JobClient.runJob(conf);
-        job.waitForCompletion();
         long residual = job.getCounters().findCounter(PageRank.Residual.ERROR).getValue();
         return residual / (1.0 * 10e4) / N;
     }
