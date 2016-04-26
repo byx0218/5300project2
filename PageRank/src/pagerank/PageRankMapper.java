@@ -16,8 +16,7 @@ public class PageRankMapper extends MapReduceBase
 
     @Override
     public void map(LongWritable key, Text value,
-            OutputCollector<Text, Text> output,
-            Reporter reporter)
+            OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
         
         // value format will be:
