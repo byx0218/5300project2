@@ -44,7 +44,7 @@ public class PageRankReducer extends MapReduceBase
         newPr *= util.Const.D;
         newPr += (1 - util.Const.D) / util.Const.N;
         
-        long residual = (long) Math.floor((Math.abs(oldPr - newPr) / newPr) * 10e4);
+        long residual = (long) Math.floor((Math.abs(oldPr - newPr) / newPr) * util.Const.AMP);
         reporter.incrCounter(PageRank.Residual.ERROR, residual);
         
         Text outValue = new Text(Double.toString(newPr) + util.Const.SPACE + dstIds);

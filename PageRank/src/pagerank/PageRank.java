@@ -57,7 +57,7 @@ public class PageRank {
         
         RunningJob job = JobClient.runJob(conf);
         long residual = job.getCounters().findCounter(PageRank.Residual.ERROR).getValue();
-        return residual / (1.0 * 10e4) / util.Const.N;
+        return residual / (1.0 * util.Const.AMP) / util.Const.N;
     }
     
 }

@@ -16,9 +16,7 @@ public class PageRankMapper extends MapReduceBase
     public void map(LongWritable key, Text value,
             OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
-        
-        // value format will be:
-        // "srcId 1.0 dstId1 dstId2 ... dtsIdn"
+        // value format will be: "srcId 1.0 dstId1 dstId2 ... dtsIdn"
         String line = value.toString().trim();
         String[] node = line.split(util.Const.DELIMITER, 3);
         String srcId = node[0];
