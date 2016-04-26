@@ -11,12 +11,7 @@ import org.apache.hadoop.mapred.Reporter;
 
 public class PageRankReducer extends MapReduceBase
         implements Reducer<Text, Text, Text, Text> {
-
-    private static final double D = 0.85;
-    private static final int N = 685230;
-    private static final String SPACE = " ";
-    private static final String DELIMITER = "\\s+";
-
+    
     @Override
     public void reduce(Text key, Iterator<Text> values,
             OutputCollector<Text, Text> output, Reporter reporter)
@@ -34,25 +29,25 @@ public class PageRankReducer extends MapReduceBase
             }
             
             if (value.startsWith("dstIds ")) {
-                dstIds = value.split(DELIMITER, 2)[1];
+                dstIds = value.split(util.Const.DELIMITER, 2)[1];
                 continue;
             }
             
             if (value.startsWith("pr ")) {
-                oldPr = Double.parseDouble(value.split(DELIMITER, 2)[1]);
+                oldPr = Double.parseDouble(value.split(util.Const.DELIMITER, 2)[1]);
                 continue;
             }
             
             newPr += Double.parseDouble(value);
         }
         
-        newPr *= D;
-        newPr += (1 - D) / N;
+        newPr *= util.Const.D;
+        newPr += (1 - util.Const.D) / util.Const.N;
         
         long residual = (long) Math.floor((Math.abs(oldPr - newPr) / newPr) * 10e4);
         reporter.incrCounter(PageRank.Residual.ERROR, residual);
         
-        Text outValue = new Text(Double.toString(newPr) + SPACE + dstIds);
+        Text outValue = new Text(Double.toString(newPr) + util.Const.SPACE + dstIds);
         output.collect(key, outValue);
     }
 

@@ -14,9 +14,6 @@ import org.apache.hadoop.mapred.TextOutputFormat;
 
 public class PageRank {
     
-    private static final int ITERATIONS = 5;
-    private static final int N = 685230;
-    
     protected static enum Residual {
         ERROR
     }
@@ -29,9 +26,9 @@ public class PageRank {
         
         String inputPath = args[0];
         String outputPath = args[1];
-        double[] residuals = new double[ITERATIONS];
+        double[] residuals = new double[util.Const.ITERATIONS];
         
-        for (int i = 0; i < ITERATIONS; i ++) {
+        for (int i = 0; i < util.Const.ITERATIONS; i ++) {
             if (i > 0) {
                 inputPath = outputPath + "/output" + i;
             }
@@ -39,7 +36,7 @@ public class PageRank {
             residuals[i] = runPageRank(inputPath, outputPath + "/output" + (i + 1));
         }
         
-        for (int i = 0; i < ITERATIONS; i ++) {
+        for (int i = 0; i < util.Const.ITERATIONS; i ++) {
             System.out.println("Iteration " + i + " avg error " + residuals[i]);
         }
     }
@@ -60,7 +57,7 @@ public class PageRank {
         
         RunningJob job = JobClient.runJob(conf);
         long residual = job.getCounters().findCounter(PageRank.Residual.ERROR).getValue();
-        return residual / (1.0 * 10e4) / N;
+        return residual / (1.0 * 10e4) / util.Const.N;
     }
     
 }

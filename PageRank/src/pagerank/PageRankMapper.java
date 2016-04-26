@@ -12,8 +12,6 @@ import org.apache.hadoop.mapred.Reporter;
 public class PageRankMapper extends MapReduceBase
         implements Mapper<LongWritable, Text, Text, Text> {
 
-    private static final String DELIMITER = "\\s+";
-
     @Override
     public void map(LongWritable key, Text value,
             OutputCollector<Text, Text> output, Reporter reporter)
@@ -22,15 +20,15 @@ public class PageRankMapper extends MapReduceBase
         // value format will be:
         // "srcId 1.0 dstId1 dstId2 ... dtsIdn"
         String line = value.toString().trim();
-        String[] node = line.split(DELIMITER, 3);
+        String[] node = line.split(util.Const.DELIMITER, 3);
         String srcId = node[0];
         double pr = Double.parseDouble(node[1]);
-        String dstIds = "";
+        String dstIds = util.Const.EMPTY;
         
         // this node has out going edges
         if (node.length == 3) {
             dstIds = node[2].trim();
-            String[] dstIdArr = dstIds.split(DELIMITER);
+            String[] dstIdArr = dstIds.split(util.Const.DELIMITER);
             String update = Double.toString(pr / dstIdArr.length);
             
             for (String dstId : dstIdArr) {
@@ -41,8 +39,8 @@ public class PageRankMapper extends MapReduceBase
         }
         
         Text outKey = new Text(srcId);
-        Text outDstIds = new Text("dstIds " + dstIds);
-        Text outOldPr = new Text("pr " + node[1]);
+        Text outDstIds = new Text(util.Const.DST_IDS_PREFIX + util.Const.SPACE + dstIds);
+        Text outOldPr = new Text(util.Const.PAGE_RANK_PREFIX + util.Const.SPACE + node[1]);
         output.collect(outKey, outDstIds);
         output.collect(outKey, outOldPr);
     }
