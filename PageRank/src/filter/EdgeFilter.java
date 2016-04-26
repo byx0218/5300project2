@@ -7,8 +7,6 @@ import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import pagerank.Node;
-
 public class EdgeFilter {
     
     private static final String SPACE = " ";
