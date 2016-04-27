@@ -17,6 +17,10 @@ public class BlockedPageRankReducer extends MapReduceBase
             OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
         
+        
+        while (values.hasNext()) {
+            
+        }
     }
 
 }
