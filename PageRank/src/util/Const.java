@@ -14,8 +14,10 @@ public class Const {
     public static final String DELIMITER = "\\s+";
     
     /** String prefixes. */
-    public static final String DST_IDS_PREFIX = "dstIds";
-    public static final String PAGE_RANK_PREFIX = "pr";
+    public static final String PREFIX_DST_IDS = "dstIds";
+    public static final String PREFIX_PR = "pr";
+    public static final String PREFIX_BE = "be";
+    public static final String PREFIX_BC = "bc";
     
     /** Block ID boundary list. */
     public static final long[] bound =

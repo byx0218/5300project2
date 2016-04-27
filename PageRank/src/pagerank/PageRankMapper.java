@@ -17,28 +17,27 @@ public class PageRankMapper extends MapReduceBase
             OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
         // value format will be: "srcId 1.0 dstId1 dstId2 ... dtsIdn"
-        String line = value.toString().trim();
-        String[] node = line.split(util.Const.DELIMITER, 3);
+        String[] node = value.toString().trim().split(util.Const.DELIMITER, 3);
         String srcId = node[0];
-        double pr = Double.parseDouble(node[1]);
         String dstIds = util.Const.EMPTY;
+        double pr = Double.parseDouble(node[1]);
         
         // this node has out going edges
         if (node.length == 3) {
             dstIds = node[2].trim();
             String[] dstIdArr = dstIds.split(util.Const.DELIMITER);
-            String update = Double.toString(pr / dstIdArr.length);
+            String prUpdate = Double.toString(pr / dstIdArr.length);
             
             for (String dstId : dstIdArr) {
                 Text outKey = new Text(dstId);
-                Text outValue = new Text(update);
+                Text outValue = new Text(prUpdate);
                 output.collect(outKey, outValue);
             }
         }
         
         Text outKey = new Text(srcId);
-        Text outDstIds = new Text(util.Const.DST_IDS_PREFIX + util.Const.SPACE + dstIds);
-        Text outOldPr = new Text(util.Const.PAGE_RANK_PREFIX + util.Const.SPACE + node[1]);
+        Text outDstIds = new Text(util.Const.PREFIX_DST_IDS + util.Const.SPACE + dstIds);
+        Text outOldPr = new Text(util.Const.PREFIX_PR + util.Const.SPACE + node[1]);
         output.collect(outKey, outDstIds);
         output.collect(outKey, outOldPr);
     }
