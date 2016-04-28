@@ -13,10 +13,14 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
+import pagerank.PageRank;
+
 public class BlockedPageRankReducer extends MapReduceBase
         implements Reducer<Text, Text, Text, Text> {
     
-    private Map<String, String> nodes = new HashMap<>();
+    private Map<String, Double> oldPRs = new HashMap<>();
+    private Map<String, Double> newPRs = new HashMap<>();
+    private Map<String, String> nodeDstIds = new HashMap<>();
     private Map<String, List<String>> be = new HashMap<>();
     private Map<String, Double> bc = new HashMap<>();
 
@@ -25,8 +29,11 @@ public class BlockedPageRankReducer extends MapReduceBase
     public void reduce(Text key, Iterator<Text> values,
             OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
-        nodes.clear();
+        clear();
         String value = null;
+        int iterations = 0;
+        double iterResidual = Double.MAX_VALUE;
+        double blockResidual = 0.0;
         
         while (values.hasNext()) {
             value = values.next().toString();
@@ -44,26 +51,50 @@ public class BlockedPageRankReducer extends MapReduceBase
             }
         }
         
-        
-    }
-    
-    /*
-    void IterateBlockOnce(B) {
-        for( v ∈ B ) { NPR[v] = 0; }
-        for( v ∈ B ) {
-            for( u where <u, v> ∈ BE ) {
-                NPR[v] += PR[u] / deg(u);
-            }
-            for( u, R where <u,v,R> ∈ BC ) {
-                NPR[v] += R;
-            }
-            NPR[v] = d*NPR[v] + (1-d)/N;
+        while (iterations < util.Const.ITERATIONS && iterResidual > util.Const.THRESHOLD) {
+            iterResidual = iterateBlockOnce();
+            iterations ++;
         }
-        for( v ∈ B ) { PR[v] = NPR[v]; }
-    }
-    */
-    public void iterateBlockOnce() {
         
+        for (String v : newPRs.keySet()) {
+            blockResidual += Math.abs(oldPRs.get(v) - newPRs.get(v)) / newPRs.get(v);
+        }
+        
+        blockResidual /= util.Const.N;
+        reporter.incrCounter(BlockedPageRank.Residual.ERROR,
+                (long) Math.floor(blockResidual * util.Const.AMP));
+        
+        for (String v : newPRs.keySet()) {
+            Text outKey = new Text(v);
+            Text outValue = new Text(newPRs.get(v) + util.Const.SPACE + nodeDstIds.get(v));
+            output.collect(outKey, outValue);
+        }
+    }
+
+    
+    private double iterateBlockOnce() {
+        double iterResidual = 0.0;
+        
+        for (String v : oldPRs.keySet()) {
+            double nPR = 0.0;
+            
+            if (be.containsKey(v)) {
+                for (String u : be.get(v)) {
+                    nPR += newPRs.get(u) / nodeDstIds.get(u).split(util.Const.DELIMITER).length;
+                }
+            }
+            
+            if (bc.containsKey(v)) {
+                nPR += bc.get(v);
+            }
+            
+            nPR *= util.Const.D;
+            nPR += (1 - util.Const.D) / util.Const.N;
+            iterResidual += Math.abs(newPRs.get(v) - nPR) / nPR;
+            newPRs.put(v, nPR);
+        }
+        
+        return iterResidual / util.Const.N;
     }
     
     
@@ -77,11 +108,11 @@ public class BlockedPageRankReducer extends MapReduceBase
         String srcId = edge[1];  // u
         String dstId = edge[2];  // v
         
-        if (!be.containsKey(srcId)) {
-            be.put(srcId, new ArrayList<String>());
+        if (!be.containsKey(dstId)) {
+            be.put(dstId, new ArrayList<String>());
         }
         
-        be.get(srcId).add(dstId);
+        be.get(dstId).add(srcId);
     }
     
     
@@ -95,11 +126,11 @@ public class BlockedPageRankReducer extends MapReduceBase
         String dstId = edge[2];
         String prUpdate = edge[3];
         
-        if (bc.containsKey(dstId)) {
-            bc.put(dstId, bc.get(dstId) + Double.parseDouble(prUpdate));
-        } else {
-            bc.put(dstId, Double.parseDouble(prUpdate));
+        if (!bc.containsKey(dstId)) {
+            bc.put(dstId, 0.0);
         }
+        
+        bc.put(dstId, bc.get(dstId) + Double.parseDouble(prUpdate));
     }
     
     
@@ -109,8 +140,19 @@ public class BlockedPageRankReducer extends MapReduceBase
      *              dstIds could be empty
      */
     private void processPR(String value) {
-        String[] node = value.split(util.Const.DELIMITER, 2);
-        nodes.put(node[0], node[1]);
+        String[] node = value.split(util.Const.DELIMITER, 3);
+        double oldPR = Double.parseDouble(node[1]);
+        oldPRs.put(node[0], oldPR);
+        newPRs.put(node[0], oldPR);
+        nodeDstIds.put(node[0], node[2]);
     }
     
+    
+    private void clear() {
+        oldPRs.clear();
+        newPRs.clear();
+        nodeDstIds.clear();
+        be.clear();
+        bc.clear();
+    }
 }

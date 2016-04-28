@@ -16,8 +16,8 @@ public class PageRankReducer extends MapReduceBase
     public void reduce(Text key, Iterator<Text> values,
             OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
-        double oldPr = 0.0;
-        double newPr = 0.0;
+        double oldPR = 0.0;
+        double newPR = 0.0;
         String value = null;
         String dstIds = null;
         
@@ -34,20 +34,20 @@ public class PageRankReducer extends MapReduceBase
             }
             
             if (value.startsWith(util.Const.PREFIX_PR)) {
-                oldPr = Double.parseDouble(value.split(util.Const.DELIMITER, 2)[1]);
+                oldPR = Double.parseDouble(value.split(util.Const.DELIMITER, 2)[1]);
                 continue;
             }
             
-            newPr += Double.parseDouble(value);
+            newPR += Double.parseDouble(value);
         }
         
-        newPr *= util.Const.D;
-        newPr += (1 - util.Const.D) / util.Const.N;
+        newPR *= util.Const.D;
+        newPR += (1 - util.Const.D) / util.Const.N;
         
-        long residual = (long) Math.floor((Math.abs(oldPr - newPr) / newPr) * util.Const.AMP);
+        long residual = (long) Math.floor((Math.abs(oldPR - newPR) / newPR) * util.Const.AMP);
         reporter.incrCounter(PageRank.Residual.ERROR, residual);
         
-        Text outValue = new Text(Double.toString(newPr) + util.Const.SPACE + dstIds);
+        Text outValue = new Text(Double.toString(newPR) + util.Const.SPACE + dstIds);
         output.collect(key, outValue);
     }
 

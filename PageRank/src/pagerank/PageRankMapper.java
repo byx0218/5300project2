@@ -37,9 +37,9 @@ public class PageRankMapper extends MapReduceBase
         
         Text outKey = new Text(srcId);
         Text outDstIds = new Text(util.Const.PREFIX_DST_IDS + util.Const.SPACE + dstIds);
-        Text outOldPr = new Text(util.Const.PREFIX_PR + util.Const.SPACE + node[1]);
+        Text outOldPR = new Text(util.Const.PREFIX_PR + util.Const.SPACE + node[1]);
         output.collect(outKey, outDstIds);
-        output.collect(outKey, outOldPr);
+        output.collect(outKey, outOldPR);
     }
 
 }

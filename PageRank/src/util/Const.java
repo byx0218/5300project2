@@ -7,6 +7,7 @@ public class Const {
     public static final int N = 685230;
     public static final double D = 0.85;
     public static final int AMP = 10000;
+    public static final double THRESHOLD = 0.001;
     
     /** Regular expression strings. */
     public static final String EMPTY = "";
