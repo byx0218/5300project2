@@ -96,7 +96,7 @@ public class BlockedPageRankReducer extends MapReduceBase
             newPRs.put(v, nPR);
         }
         
-        return iterResidual / util.Const.N;
+        return iterResidual / oldPRs.size();
     }
     
     
