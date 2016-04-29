@@ -18,6 +18,7 @@ public class PageRank {
         ERROR
     }
     
+    
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
             System.err.println("Usage: PageRank <input_path> <output_path>");
@@ -40,6 +41,7 @@ public class PageRank {
             System.out.println("Iteration " + i + " avg error " + residuals[i]);
         }
     }
+    
     
     public static double runPageRank(String inputPath, String outputPath) throws IOException {
         JobConf conf = new JobConf(PageRank.class);

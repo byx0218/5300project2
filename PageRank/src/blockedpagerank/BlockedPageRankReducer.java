@@ -13,8 +13,6 @@ import org.apache.hadoop.mapred.OutputCollector;
 import org.apache.hadoop.mapred.Reducer;
 import org.apache.hadoop.mapred.Reporter;
 
-import pagerank.PageRank;
-
 public class BlockedPageRankReducer extends MapReduceBase
         implements Reducer<Text, Text, Text, Text> {
     
@@ -66,12 +64,16 @@ public class BlockedPageRankReducer extends MapReduceBase
         
         for (String v : newPRs.keySet()) {
             Text outKey = new Text(v);
-            Text outValue = new Text(newPRs.get(v) + util.Const.SPACE + nodeDstIds.get(v));
+            Text outValue = new Text(Double.toString(newPRs.get(v)) + util.Const.SPACE + nodeDstIds.get(v));
             output.collect(outKey, outValue);
         }
     }
 
     
+    /**
+     * 
+     * @return
+     */
     private double iterateBlockOnce() {
         double iterResidual = 0.0;
         
@@ -148,6 +150,9 @@ public class BlockedPageRankReducer extends MapReduceBase
     }
     
     
+    /**
+     * Clears up all the hash tables in this Reducer instance.
+     */
     private void clear() {
         oldPRs.clear();
         newPRs.clear();
