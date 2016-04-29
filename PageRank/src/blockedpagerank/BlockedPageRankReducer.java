@@ -161,6 +161,7 @@ public class BlockedPageRankReducer extends MapReduceBase
         oldPRs.clear();
         newPRs.clear();
         nodeDstIds.clear();
+        nodeOutDegree.clear();
         be.clear();
         bc.clear();
     }
