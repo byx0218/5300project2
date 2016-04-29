@@ -79,6 +79,7 @@ public class BlockedPageRankReducer extends MapReduceBase
      */
     private double iterateBlockOnce() {
         double iterResidual = 0.0;
+        Map<String, Double> tempPRs = new HashMap<>();
         
         for (String v : oldPRs.keySet()) {
             double nPR = 0.0;
@@ -96,9 +97,10 @@ public class BlockedPageRankReducer extends MapReduceBase
             nPR *= util.Const.D;
             nPR += (1 - util.Const.D) / util.Const.N;
             iterResidual += Math.abs(newPRs.get(v) - nPR) / nPR;
-            newPRs.put(v, nPR);
+            tempPRs.put(v, nPR);
         }
         
+        newPRs = tempPRs;
         return iterResidual / oldPRs.size();
     }
     
