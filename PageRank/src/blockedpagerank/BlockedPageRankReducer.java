@@ -74,8 +74,8 @@ public class BlockedPageRankReducer extends MapReduceBase
 
     
     /**
-     * 
-     * @return
+     * Iterates through the block once.
+     * @return residual error between this iteration and last iteration
      */
     private double iterateBlockOnce() {
         double iterResidual = 0.0;
