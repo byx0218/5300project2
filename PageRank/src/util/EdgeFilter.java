@@ -5,9 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class EdgeFilter {
     
@@ -81,53 +79,53 @@ public class EdgeFilter {
         return blockIds;
     }
     
-    /**
-     * Processes the Edges. Filter out the Edges with values within
-     * REJECT_MIN and REJECT_MAX. Returns all the Nodes in a map.
-     * @return map of all Nodes
-     */
-    public static Map<Long, Node> processEdges() {
-        Map<Long, Node> nodeTbl = new HashMap<>();
-        String line = null;
-        
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(EDGES));
-            
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                
-                if (line.isEmpty()) {
-                    break;
-                }
-                
-                String[] edge = line.split(util.Const.DELIMITER);
-                long srcId = Long.parseLong(edge[0]);
-                long dstId = Long.parseLong(edge[1]);
-                double x = Double.parseDouble(edge[2]);
-                
-                if (!nodeTbl.containsKey(srcId)) {
-                    nodeTbl.put(srcId, new Node(srcId));
-                }
-                
-                if (!nodeTbl.containsKey(dstId)) {
-                    nodeTbl.put(dstId, new Node(dstId));
-                }
-                
-                if (REJECT_MIN <= x && x < REJECT_MAX) {
-                    continue;
-                }
-                
-                nodeTbl.get(srcId).addDestination(dstId);
-            }
-            
-            reader.close();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return nodeTbl;
-    }
+//    /**
+//     * Processes the Edges. Filter out the Edges with values within
+//     * REJECT_MIN and REJECT_MAX. Returns all the Nodes in a map.
+//     * @return map of all Nodes
+//     */
+//    public static Map<Long, Node> processEdges() {
+//        Map<Long, Node> nodeTbl = new HashMap<>();
+//        String line = null;
+//        
+//        try {
+//            BufferedReader reader = new BufferedReader(new FileReader(EDGES));
+//            
+//            while ((line = reader.readLine()) != null) {
+//                line = line.trim();
+//                
+//                if (line.isEmpty()) {
+//                    break;
+//                }
+//                
+//                String[] edge = line.split(util.Const.DELIMITER);
+//                long srcId = Long.parseLong(edge[0]);
+//                long dstId = Long.parseLong(edge[1]);
+//                double x = Double.parseDouble(edge[2]);
+//                
+//                if (!nodeTbl.containsKey(srcId)) {
+//                    nodeTbl.put(srcId, new Node(srcId));
+//                }
+//                
+//                if (!nodeTbl.containsKey(dstId)) {
+//                    nodeTbl.put(dstId, new Node(dstId));
+//                }
+//                
+//                if (REJECT_MIN <= x && x < REJECT_MAX) {
+//                    continue;
+//                }
+//                
+//                nodeTbl.get(srcId).addDestination(dstId);
+//            }
+//            
+//            reader.close();
+//            
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        
+//        return nodeTbl;
+//    }
     
     /**
      * Filters out all the Edges valued within REJECT_MIN and REJECT_MAX.
@@ -188,54 +186,54 @@ public class EdgeFilter {
         }
     }
     
-    /**
-     * Processes the filtered Edges. Returns all the Nodes in a map.
-     * @return map of all Nodes
-     */
-    public static Map<Long, Node> processFilteredEdges() {
-        Map<Long, Node> nodeTbl = new HashMap<>();
-        
-        try {
-            String line = null;
-            BufferedReader reader = new BufferedReader(new FileReader(FLTRED));
-            
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                
-                if (line.isEmpty())
-                    break;
-                
-                String[] node = line.split(util.Const.DELIMITER, 3);
-                long srcId = Long.parseLong(node[0]);
-                
-                if (!nodeTbl.containsKey(srcId)) {
-                    nodeTbl.put(srcId, new Node(srcId));
-                }
-                
-                Node srcNode = nodeTbl.get(srcId);
-                
-                if (node.length < 3) {  // no out-going edge
-                    continue;
-                }
-                
-                String[] dstIds = node[2].trim().split(util.Const.DELIMITER);
-                
-                for (int i = 0; i < dstIds.length; i ++) {
-                    long dstId = Long.parseLong(dstIds[i]);
-                    srcNode.addDestination(dstId);
-                    
-                    if (!nodeTbl.containsKey(dstId)) {
-                        nodeTbl.put(dstId, new Node(dstId));
-                    }
-                }
-            }
-            
-            reader.close();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return nodeTbl;
-    }
+//    /**
+//     * Processes the filtered Edges. Returns all the Nodes in a map.
+//     * @return map of all Nodes
+//     */
+//    public static Map<Long, Node> processFilteredEdges() {
+//        Map<Long, Node> nodeTbl = new HashMap<>();
+//        
+//        try {
+//            String line = null;
+//            BufferedReader reader = new BufferedReader(new FileReader(FLTRED));
+//            
+//            while ((line = reader.readLine()) != null) {
+//                line = line.trim();
+//                
+//                if (line.isEmpty())
+//                    break;
+//                
+//                String[] node = line.split(util.Const.DELIMITER, 3);
+//                long srcId = Long.parseLong(node[0]);
+//                
+//                if (!nodeTbl.containsKey(srcId)) {
+//                    nodeTbl.put(srcId, new Node(srcId));
+//                }
+//                
+//                Node srcNode = nodeTbl.get(srcId);
+//                
+//                if (node.length < 3) {  // no out-going edge
+//                    continue;
+//                }
+//                
+//                String[] dstIds = node[2].trim().split(util.Const.DELIMITER);
+//                
+//                for (int i = 0; i < dstIds.length; i ++) {
+//                    long dstId = Long.parseLong(dstIds[i]);
+//                    srcNode.addDestination(dstId);
+//                    
+//                    if (!nodeTbl.containsKey(dstId)) {
+//                        nodeTbl.put(dstId, new Node(dstId));
+//                    }
+//                }
+//            }
+//            
+//            reader.close();
+//            
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        
+//        return nodeTbl;
+//    }
 }
