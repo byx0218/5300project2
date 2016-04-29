@@ -23,10 +23,6 @@ public class BlockedPageRankMapper extends MapReduceBase
         double pr = Double.parseDouble(node[1]);
         long srcBlockId = util.Const.blockIdOfNode(Long.parseLong(srcId));
         
-        Text outKey = new Text(Long.toString(srcBlockId));
-        Text outValue = new Text(srcId + util.Const.SPACE + node[1] + util.Const.SPACE + dstIds);
-        output.collect(outKey, outValue);
-        
         // this node has out going edges
         if (node.length == 3) {
             dstIds = node[2].trim();
@@ -36,7 +32,8 @@ public class BlockedPageRankMapper extends MapReduceBase
             for (String dstId : dstIdArr) {
                 String edge = util.Const.SPACE + srcId + util.Const.SPACE + dstId;
                 long dstBlockId = util.Const.blockIdOfNode(Long.parseLong(dstId));
-                outKey = new Text(Long.toString(dstBlockId));
+                Text outKey = new Text(Long.toString(dstBlockId));
+                Text outValue = null;
                 
                 if (dstBlockId == srcBlockId) {
                     // two Nodes in the same block
@@ -50,6 +47,10 @@ public class BlockedPageRankMapper extends MapReduceBase
                 output.collect(outKey, outValue);
             }
         }
+        
+        Text outKey = new Text(Long.toString(srcBlockId));
+        Text outValue = new Text(srcId + util.Const.SPACE + node[1] + util.Const.SPACE + dstIds);
+        output.collect(outKey, outValue);
     }
 
 }
