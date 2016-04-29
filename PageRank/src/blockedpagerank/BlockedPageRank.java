@@ -71,7 +71,7 @@ public class BlockedPageRank {
         RunningJob job = JobClient.runJob(conf);
         long residual = job.getCounters().findCounter(BlockedPageRank.Residual.ERROR).getValue();
         long iteration = job.getCounters().findCounter(BlockedPageRank.Residual.BLOCK_ITER).getValue();
-        blockIters.add(((double) iteration) / 68);
+        blockIters.add(((double) iteration) / util.Const.BLOCKS);
         return residual / (1.0 * util.Const.AMP) / util.Const.BLOCKS;
         
     }
