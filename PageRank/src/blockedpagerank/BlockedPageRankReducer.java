@@ -58,7 +58,7 @@ public class BlockedPageRankReducer extends MapReduceBase
             blockResidual += Math.abs(oldPRs.get(v) - newPRs.get(v)) / newPRs.get(v);
         }
         
-        blockResidual /= util.Const.N;
+        blockResidual /= oldPRs.size();
         reporter.incrCounter(BlockedPageRank.Residual.ERROR,
                 (long) Math.floor(blockResidual * util.Const.AMP));
         
