@@ -3,11 +3,12 @@ package util;
 public class Const {
     
     /** Some constant integer values. */
-    public static final int ITERATIONS = 5;
     public static final int N = 685230;
     public static final int BLOCKS = 68;
-    public static final double D = 0.85;
     public static final int AMP = 10000;
+    public static final int ITERATIONS = 5;
+    
+    public static final double D = 0.85;
     public static final double THRESHOLD = 0.001;
     
     /** Regular expression strings. */
@@ -16,10 +17,10 @@ public class Const {
     public static final String DELIMITER = "\\s+";
     
     /** String prefixes. */
-    public static final String PREFIX_DST_IDS = "dstIds";
     public static final String PREFIX_PR = "pr";
     public static final String PREFIX_BE = "be";
     public static final String PREFIX_BC = "bc";
+    public static final String PREFIX_DST_IDS = "dstIds";
     
     /** Block ID boundary list. */
     public static final long[] bound =
