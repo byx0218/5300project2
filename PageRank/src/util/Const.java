@@ -5,7 +5,7 @@ public class Const {
     /** Some constant integer values. */
     public static final int N = 685230;
     public static final int BLOCKS = 68;
-    public static final int AMP = 10000;
+    public static final long AMP = 10000000000l;
     public static final int ITERATIONS = 5;
     
     public static final double D = 0.85;

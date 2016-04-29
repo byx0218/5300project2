@@ -17,8 +17,10 @@ import org.apache.hadoop.mapred.TextOutputFormat;
 public class BlockedPageRank {
 
     protected static enum Residual {
-        ERROR
+        ERROR, BLOCK_ITER
     }
+    
+    private static List<Double> blockIters = new ArrayList<>();
     
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -45,6 +47,8 @@ public class BlockedPageRank {
         
         for (int i = 0; i < residuals.size(); i ++) {
             System.out.println("Iteration " + i + " avg error " + residuals.get(i));
+            System.out.println("Avg iterations of block " + blockIters.get(i));
+            System.out.println();
         }
     }
     
@@ -66,6 +70,8 @@ public class BlockedPageRank {
         
         RunningJob job = JobClient.runJob(conf);
         long residual = job.getCounters().findCounter(BlockedPageRank.Residual.ERROR).getValue();
+        long iteration = job.getCounters().findCounter(BlockedPageRank.Residual.BLOCK_ITER).getValue();
+        blockIters.add(((double) iteration) / 68);
         return residual / (1.0 * util.Const.AMP) / util.Const.BLOCKS;
         
     }

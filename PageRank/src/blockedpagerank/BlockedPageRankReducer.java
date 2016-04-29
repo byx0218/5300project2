@@ -49,12 +49,15 @@ public class BlockedPageRankReducer extends MapReduceBase
             }
         }
         
+        int iteration = 0;
+        
         while (iterResidual > util.Const.THRESHOLD) {
 //            if (iterations >= util.Const.ITERATIONS) {
 //                break;
 //            }
             
             iterResidual = iterateBlockOnce();
+            iteration ++;
         }
         
         for (String v : newPRs.keySet()) {
@@ -64,6 +67,7 @@ public class BlockedPageRankReducer extends MapReduceBase
         blockResidual /= oldPRs.size();
         reporter.incrCounter(BlockedPageRank.Residual.ERROR,
                 (long) Math.floor(blockResidual * util.Const.AMP));
+        reporter.incrCounter(BlockedPageRank.Residual.BLOCK_ITER, iteration);
         
         for (String v : newPRs.keySet()) {
             Text outKey = new Text(v);
