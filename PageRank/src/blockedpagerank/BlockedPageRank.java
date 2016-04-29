@@ -44,7 +44,6 @@ public class BlockedPageRank {
             iter ++;
         }
         
-        
         for (int i = 0; i < residuals.size(); i ++) {
             System.out.println("Iteration " + i + " avg error " + residuals.get(i));
         }
