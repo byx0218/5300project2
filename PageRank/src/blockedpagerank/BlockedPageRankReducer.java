@@ -30,8 +30,6 @@ public class BlockedPageRankReducer extends MapReduceBase
             throws IOException {
         clear();
         String value = null;
-        double iterResidual = Double.MAX_VALUE;
-        double blockResidual = 0.0;
         
         while (values.hasNext()) {
             value = values.next().toString();
@@ -50,6 +48,8 @@ public class BlockedPageRankReducer extends MapReduceBase
         }
         
         int iteration = 0;
+        double iterResidual = Double.MAX_VALUE;
+        double blockResidual = 0.0;
         
         while (iterResidual > util.Const.THRESHOLD) {
             iterResidual = iterateBlockOnce();
