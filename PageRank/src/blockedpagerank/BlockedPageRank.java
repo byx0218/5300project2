@@ -21,6 +21,7 @@ public class BlockedPageRank {
     }
     
     private static List<Double> blockIters = new ArrayList<>();
+    private static List<Double> residuals = new ArrayList<>();
     
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -31,7 +32,6 @@ public class BlockedPageRank {
         String inputPath = args[0];
         String outputPath = args[1];
         
-        List<Double> residuals = new ArrayList<>();
         double residual = Double.MAX_VALUE;
         int iter = 0;
         
