@@ -40,6 +40,7 @@ public class BlockedPageRank {
             
             residual = runBlockedPageRank(inputPath, outputPath + "/block_output" + (iter + 1));
             residuals.add(residual);
+            System.out.println("******* Iteration " + iter + " avg error " + residual);
             iter ++;
         }
         

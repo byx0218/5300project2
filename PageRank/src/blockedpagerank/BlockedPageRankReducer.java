@@ -19,6 +19,7 @@ public class BlockedPageRankReducer extends MapReduceBase
     private Map<String, Double> oldPRs = new HashMap<>();
     private Map<String, Double> newPRs = new HashMap<>();
     private Map<String, String> nodeDstIds = new HashMap<>();
+    private Map<String, Integer> nodeOutDegree = new HashMap<>();
     private Map<String, List<String>> be = new HashMap<>();
     private Map<String, Double> bc = new HashMap<>();
 
@@ -82,7 +83,7 @@ public class BlockedPageRankReducer extends MapReduceBase
             
             if (be.containsKey(v)) {
                 for (String u : be.get(v)) {
-                    nPR += newPRs.get(u) / nodeDstIds.get(u).split(util.Const.DELIMITER).length;
+                    nPR += newPRs.get(u) / nodeOutDegree.get(u);
                 }
             }
             
@@ -147,6 +148,7 @@ public class BlockedPageRankReducer extends MapReduceBase
         oldPRs.put(node[0], oldPR);
         newPRs.put(node[0], oldPR);
         nodeDstIds.put(node[0], node[2]);
+        nodeOutDegree.put(node[0], node[2].split(util.Const.DELIMITER).length);
     }
     
     
