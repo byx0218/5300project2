@@ -1,7 +1,7 @@
 package util;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Const {
     
@@ -67,15 +67,14 @@ public class Const {
     }
     
     
-    public static Map<Long, Double> twoLowestNodesEachBlock() {
-        Map<Long, Double> ret = new TreeMap<Long, Double>();
-        double initPR = 0.0;
-        ret.put(0L, initPR);
-        ret.put(1L, initPR);
+    public static Set<Long> twoLowestNodesEachBlock() {
+        Set<Long> ret = new HashSet<Long>();
+        ret.add(0L);
+        ret.add(1L);
         
         for (int i = 0; i < 67; i ++) {
-            ret.put(bound[i], initPR);
-            ret.put(bound[i] + 1, initPR);
+            ret.add(bound[i]);
+            ret.add(bound[i] + 1);
         }
         
         return ret;

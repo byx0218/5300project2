@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.MapReduceBase;
@@ -29,6 +30,7 @@ public class BlockedPageRankReducer extends MapReduceBase
             OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
         clear();
+        Set<Long> twoLowestNodes = util.Const.twoLowestNodesEachBlock();
         String value = null;
         
         while (values.hasNext()) {
@@ -68,14 +70,16 @@ public class BlockedPageRankReducer extends MapReduceBase
         for (String v : newPRs.keySet()) {
             long nodeId = Long.parseLong(v);
             
-            if (BlockedPageRank.twoLowestNodesEachBlock.containsKey(nodeId)) {
-                BlockedPageRank.twoLowestNodesEachBlock.put(nodeId, newPRs.get(v));
+            if (twoLowestNodes.contains(nodeId)) {
+                System.out.println("  Node " + nodeId + " PR = " + newPRs.get(v));
             }
             
             Text outKey = new Text(v);
             Text outValue = new Text(Double.toString(newPRs.get(v)) + util.Const.SPACE + nodeDstIds.get(v));
             output.collect(outKey, outValue);
         }
+        
+        System.out.println();
     }
 
     

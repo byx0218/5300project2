@@ -2,9 +2,7 @@ package blockedpagerank;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -24,7 +22,6 @@ public class BlockedPageRank {
     
     private static List<Double> blockIters = new ArrayList<>();
     private static List<Double> residuals = new ArrayList<>();
-    protected static Map<Long, Double> twoLowestNodesEachBlock = util.Const.twoLowestNodesEachBlock();
     
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
@@ -48,25 +45,12 @@ public class BlockedPageRank {
             iter ++;
         }
         
-        System.out.println();
-        
         for (int i = 0; i < residuals.size(); i ++) {
             System.out.println("Iteration " + i + " avg error " + residuals.get(i));
             System.out.println("Avg iterations of block " + blockIters.get(i));
             System.out.println();
         }
         
-        Iterator<Long> nodeIter = twoLowestNodesEachBlock.keySet().iterator();
-        
-        for (int i = 0; i < util.Const.BLOCKS; i ++) {
-            long nodeId1 = nodeIter.next();
-            long nodeId2 = nodeIter.next();
-            
-            System.out.println("Block ID " + i);
-            System.out.println("   Node ID " + nodeId1 + ": " + twoLowestNodesEachBlock.get(nodeId1));
-            System.out.println("   Node ID " + nodeId2 + ": " + twoLowestNodesEachBlock.get(nodeId2));
-            System.out.println();
-        }
     }
     
     
@@ -86,6 +70,7 @@ public class BlockedPageRank {
         FileOutputFormat.setOutputPath(conf, new Path(outputPath));
         
         RunningJob job = JobClient.runJob(conf);
+        job.waitForCompletion();
         
         long residual = job.getCounters().findCounter(BlockedPageRank.Residual.ERROR).getValue();
         long iter = job.getCounters().findCounter(BlockedPageRank.Residual.BLOCK_ITER).getValue();
