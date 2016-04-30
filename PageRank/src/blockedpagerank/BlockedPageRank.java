@@ -53,7 +53,13 @@ public class BlockedPageRank {
         
     }
     
-    
+    /**
+     * Runs the blocked computation of page rank once.
+     * @param inputPath the input file path
+     * @param outputPath the output directory path
+     * @return the avg. residual error of this map reduce pass
+     * @throws IOException
+     */
     public static double runBlockedPageRank(String inputPath, String outputPath)
             throws IOException {
         JobConf conf = new JobConf(BlockedPageRank.class);

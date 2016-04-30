@@ -43,6 +43,13 @@ public class PageRank {
     }
     
     
+    /**
+     * Runs the simple computation of page rank once.
+     * @param inputPath the input file path
+     * @param outputPath the output directory path
+     * @return the avg. residual error of this map reduce pass
+     * @throws IOException
+     */
     public static double runPageRank(String inputPath, String outputPath) throws IOException {
         JobConf conf = new JobConf(PageRank.class);
         conf.setOutputKeyClass(Text.class);

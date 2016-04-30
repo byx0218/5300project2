@@ -67,6 +67,10 @@ public class Const {
     }
     
     
+    /**
+     * Returns a Set that contains the lowest two node IDs for all blocks.
+     * @return set of lowest two node IDs for all blocks
+     */
     public static Set<Long> twoLowestNodesEachBlock() {
         Set<Long> ret = new HashSet<Long>();
         ret.add(0L);

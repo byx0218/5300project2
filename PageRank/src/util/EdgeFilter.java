@@ -23,29 +23,18 @@ public class EdgeFilter {
     private static final double INIT_PR = 1.0 / util.Const.N;
     
 //    public static void main(String[] args) {
-//        Map<Long, Node> nodeTbl1 = processEdges();
 //        filterEdges();
-//        Map<Long, Node> nodeTbl2 = processFilteredEdges();
+//        int numEdges = countEdges();
 //        
-//        System.out.println(nodeTbl1.size());
-//        System.out.println(nodeTbl2.size());
+//        System.out.println("Reject min: " + REJECT_MIN);
+//        System.out.println("Reject max: " + REJECT_MAX);
 //        
-//        for (Long srcId : nodeTbl1.keySet()) {
-//            if (nodeTbl2.containsKey(srcId)) {
-//                Node n1 = nodeTbl1.get(srcId);
-//                Node n2 = nodeTbl2.get(srcId);
-//                
-//                if (!n1.getDestinationList().equals(n2.getDestinationList())) {
-//                    System.out.println("list error " + srcId);
-//                    break;
-//                }
-//            } else {
-//                System.out.println("key error " + srcId);
-//                break;
-//            }
-//        }
+//        System.out.println("Number of edges selected: " + numEdges);
 //    }
     
+    /**
+     * Processes the blocks.txt file.
+     */
     public static int[] processBlocks() {
         String line = null;
         List<Integer> blocks = new ArrayList<Integer>();
@@ -83,7 +72,7 @@ public class EdgeFilter {
     
     /**
      * Filters out all the Edges valued within REJECT_MIN and REJECT_MAX.
-     * Writes the valid Edges into another file.
+     * Writes the selected Edges into another file.
      */
     public static void filterEdges() {
         String line = null;
@@ -140,4 +129,36 @@ public class EdgeFilter {
         }
     }
 
+    
+    /**
+     * Counts the number of selected edges in filtered_edges.txt file.
+     * @return the number of selected edges
+     */
+    public static int countEdges() {
+        String line = null;
+        int count = 0;
+        
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(FLTRED));
+            
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                
+                if (line.isEmpty()) {
+                    break;
+                }
+                
+                String[] node = line.split(util.Const.DELIMITER);
+                count += node.length - 2;
+            }
+            
+            reader.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return count;
+    }
+    
 }

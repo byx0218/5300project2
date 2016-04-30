@@ -30,9 +30,10 @@ public class BlockedPageRankReducer extends MapReduceBase
             OutputCollector<Text, Text> output, Reporter reporter)
             throws IOException {
         clear();
-        Set<Long> twoLowestNodes = util.Const.twoLowestNodesEachBlock();
+        Set<Long> twoLowestNodesEachBlock = util.Const.twoLowestNodesEachBlock();
         String value = null;
         
+        // process and store all the values from map task 
         while (values.hasNext()) {
             value = values.next().toString();
             
@@ -49,6 +50,7 @@ public class BlockedPageRankReducer extends MapReduceBase
             }
         }
         
+        // do some iterations within this block
         int iteration = 0;
         double iterResidual = Double.MAX_VALUE;
         double blockResidual = 0.0;
@@ -70,7 +72,7 @@ public class BlockedPageRankReducer extends MapReduceBase
         for (String v : newPRs.keySet()) {
             long nodeId = Long.parseLong(v);
             
-            if (twoLowestNodes.contains(nodeId)) {
+            if (twoLowestNodesEachBlock.contains(nodeId)) {
                 System.out.println("  Node " + nodeId + " PR = " + newPRs.get(v));
             }
             
