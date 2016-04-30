@@ -52,7 +52,7 @@ public class BlockedPageRankReducer extends MapReduceBase
         double blockResidual = 0.0;
         
         while (iterResidual > util.Const.THRESHOLD) {
-            iterResidual = iterateBlockOnce();
+            iterResidual = iterateBlockOnce(Long.parseLong(key.toString()), reporter);
             iteration ++;
         }
         
@@ -66,6 +66,12 @@ public class BlockedPageRankReducer extends MapReduceBase
                 (long) Math.floor(blockResidual * util.Const.AMP));
         
         for (String v : newPRs.keySet()) {
+            long nodeId = Long.parseLong(v);
+            
+            if (BlockedPageRank.twoLowestNodesEachBlock.containsKey(nodeId)) {
+                BlockedPageRank.twoLowestNodesEachBlock.put(nodeId, newPRs.get(v));
+            }
+            
             Text outKey = new Text(v);
             Text outValue = new Text(Double.toString(newPRs.get(v)) + util.Const.SPACE + nodeDstIds.get(v));
             output.collect(outKey, outValue);
@@ -75,9 +81,10 @@ public class BlockedPageRankReducer extends MapReduceBase
     
     /**
      * Iterates through the block once.
+     * @param blockId block ID of this reduce task
      * @return residual error between this iteration and last iteration
      */
-    private double iterateBlockOnce() {
+    private double iterateBlockOnce(long blockId, Reporter reporter) {
         double iterResidual = 0.0;
         Map<String, Double> tempPRs = new HashMap<>();
         

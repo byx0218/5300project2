@@ -1,11 +1,14 @@
 package util;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class Const {
     
     /** Some constant integer values. */
     public static final int N = 685230;
     public static final int BLOCKS = 68;
-    public static final long AMP = 10000000000l;
+    public static final int AMP = 10000;
     public static final int ITERATIONS = 5;
     
     public static final double D = 0.85;
@@ -33,7 +36,7 @@ public class Const {
                     493968, 503752, 514131, 524510, 534709, 545088, 555467, 565846,
                     576225, 586604, 596585, 606367, 616148, 626448, 636240, 646022,
                     655804, 665666, 675448, 685230};
-    
+
     
     /**
      * Given a Node ID, return the corresponding Block ID.
@@ -63,4 +66,18 @@ public class Const {
         return (long) lo;
     }
     
+    
+    public static Map<Long, Double> twoLowestNodesEachBlock() {
+        Map<Long, Double> ret = new TreeMap<Long, Double>();
+        double initPR = 0.0;
+        ret.put(0L, initPR);
+        ret.put(1L, initPR);
+        
+        for (int i = 0; i < 67; i ++) {
+            ret.put(bound[i], initPR);
+            ret.put(bound[i] + 1, initPR);
+        }
+        
+        return ret;
+    }
 }
